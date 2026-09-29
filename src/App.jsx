@@ -6,9 +6,9 @@ const App = () => {
   const [samples, setSamples] = useState([]); 
   const [newSample, setNewSample] = useState({ name: '', status: 'Pending' });
 
-  // FETCH DATA ON LOAD
+  // FETCH DATA ON LOAD - Make sure this matches your devtunnels URL!
   useEffect(() => {
-    fetch('http://localhost:8081/api/samples')
+    fetch('https://lk98mgln-8081.inc1.devtunnels.ms/api/samples')
       .then(res => res.json())
       .then(data => setSamples(data))
       .catch(err => console.error("Failed to fetch samples:", err));
@@ -31,7 +31,7 @@ const App = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:8081/api/samples', {
+      const response = await fetch('https://lk98mgln-8081.inc1.devtunnels.ms/api/samples', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(sample)
@@ -48,11 +48,10 @@ const App = () => {
   // DELETE SAMPLE
   const handleDeleteSample = async (id) => {
     try {
-      await fetch(`http://localhost:8081/api/samples/${id}`, {
+      await fetch(`https://lk98mgln-8081.inc1.devtunnels.ms/api/samples/${id}`, {
         method: 'DELETE',
       });
       
-      // Update UI by filtering out the deleted sample
       setSamples(samples.filter(sample => sample.id !== id));
     } catch (err) {
       console.error("Failed to delete sample:", err);
@@ -65,85 +64,115 @@ const App = () => {
 
   return (
     <div className={`app-container ${theme}-mode`}>
-      <header className="header">
-        <h1>{theme === 'classic' ? 'LIMS v4.0 - LabVantage Clone' : 'LIMS Stellar Edition'}</h1>
-        <button onClick={toggleTheme}>
-          Switch to {theme === 'classic' ? 'Stellar' : 'Classic'} Mode
-        </button>
-      </header>
+      <div className="app-window">
+        
+        <header className="header">
+          <h1>{theme === 'classic' ? 'LabVantage - Sample Management v4.0' : 'LIMS Stellar Edition'}</h1>
+          <div className="header-btns">
+            <button onClick={toggleTheme}>
+              {theme === 'classic' ? 'Switch to Stellar UI' : 'Switch to Classic UI'}
+            </button>
+            {theme === 'classic' && (
+              <>
+                <button>_</button>
+                <button>☐</button>
+                <button>X</button>
+              </>
+            )}
+          </div>
+        </header>
 
-      <div className="dashboard">
-        <div className="stat-card">
-          <p>Total Samples</p>
-          <h3>{samples.length}</h3>
+        <div className="menu-bar">
+          <span className="menu-item"><u>F</u>ile</span>
+          <span className="menu-item"><u>E</u>dit</span>
+          <span className="menu-item"><u>V</u>iew</span>
+          <span className="menu-item"><u>T</u>ools</span>
+          <span className="menu-item"><u>H</u>elp</span>
         </div>
-        <div className="stat-card">
-          <p>Pending</p>
-          <h3>{samples.filter(s => s.status === 'Pending').length}</h3>
+
+        <div className="content-area">
+          <div className="dashboard">
+            <div className="stat-card">
+              <p>Total Samples</p>
+              <h3>{samples.length}</h3>
+            </div>
+            <div className="stat-card">
+              <p>Pending</p>
+              <h3>{samples.filter(s => s.status === 'Pending').length}</h3>
+            </div>
+            <div className="stat-card">
+              <p>Completed</p>
+              <h3>{samples.filter(s => s.status === 'Completed').length}</h3>
+            </div>
+          </div>
+
+          <div className="form-container">
+            <input 
+              type="text" 
+              placeholder="Sample Name" 
+              value={newSample.name}
+              onChange={(e) => setNewSample({...newSample, name: e.target.value})}
+            />
+            <select 
+              value={newSample.status} 
+              onChange={(e) => setNewSample({...newSample, status: e.target.value})}
+            >
+              <option value="Pending">Pending</option>
+              <option value="Processing">Processing</option>
+              <option value="Completed">Completed</option>
+            </select>
+            <button onClick={handleAddSample}>Register Sample</button>
+          </div>
+
+          {/* New responsive wrapper for the table */}
+          <div className="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Sample ID</th>
+                  <th>Name</th>
+                  <th>Registration Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {samples.map((sample) => (
+                  <tr key={sample.id}>
+                    <td>{sample.id}</td>
+                    <td>{sample.name}</td>
+                    <td>{sample.date}</td>
+                    <td>
+                      <span className={theme === 'stellar' ? getStatusClass(sample.status) : ''}>
+                        {sample.status}
+                      </span>
+                    </td>
+                    <td>
+                      <button 
+                        onClick={() => handleDeleteSample(sample.id)}
+                        style={{ background: '#ef4444', color: '#fff', padding: '0.3rem 0.8rem', fontSize: '0.8rem', width: 'auto' }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {samples.length === 0 && (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center' }}>No samples found or loading...</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div className="stat-card">
-          <p>Completed</p>
-          <h3>{samples.filter(s => s.status === 'Completed').length}</h3>
+
+        <div className="status-bar">
+          <span>Ready. Connected to PostgreSQL.</span>
+          <span>Date: {new Date().toISOString().split('T')[0]}</span>
         </div>
+
       </div>
-
-      <div className="form-container">
-        <input 
-          type="text" 
-          placeholder="Sample Name" 
-          value={newSample.name}
-          onChange={(e) => setNewSample({...newSample, name: e.target.value})}
-        />
-        <select 
-          value={newSample.status} 
-          onChange={(e) => setNewSample({...newSample, status: e.target.value})}
-        >
-          <option value="Pending">Pending</option>
-          <option value="Processing">Processing</option>
-          <option value="Completed">Completed</option>
-        </select>
-        <button onClick={handleAddSample}>Register Sample</button>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Sample ID</th>
-            <th>Name</th>
-            <th>Registration Date</th>
-            <th>Status</th>
-            <th>Actions</th> {/* New Column Header */}
-          </tr>
-        </thead>
-        <tbody>
-          {samples.map((sample) => (
-            <tr key={sample.id}>
-              <td>{sample.id}</td>
-              <td>{sample.name}</td>
-              <td>{sample.date}</td>
-              <td>
-                <span className={theme === 'stellar' ? getStatusClass(sample.status) : ''}>
-                  {sample.status}
-                </span>
-              </td>
-              <td>
-                {/* Delete Button */}
-                <button 
-                  onClick={() => handleDeleteSample(sample.id)}
-                  style={{ background: '#ef4444', color: '#fff', padding: '0.3rem 0.8rem', fontSize: '0.8rem' }}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-          {samples.length === 0 && (
-            <tr>
-              <td colSpan="5" style={{ textAlign: 'center' }}>No samples found or loading...</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
     </div>
   );
 };

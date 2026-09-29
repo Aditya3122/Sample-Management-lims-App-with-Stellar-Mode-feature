@@ -7,273 +7,228 @@
 
 .app-container {
   min-height: 100vh;
-  transition: all 0.1s ease; /* Faster transition for classic snappy feel */
+  transition: all 0.1s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 /* =========================================
    CLASSIC MODE (Authentic Windows 95/98 Style)
    ========================================= */
 .classic-mode {
-  background-color: #c0c0c0; /* Authentic classic Windows gray */
+  background-color: #008080;
   font-family: "MS Sans Serif", "Tahoma", "Arial", sans-serif;
   color: #000;
   padding: 20px;
-  font-size: 13px; /* Smaller, classic font size */
+  font-size: 13px;
+  align-items: center;
+  justify-content: center;
 }
 
-/* 3D Outset Border for main containers */
-.classic-mode .header, 
-.classic-mode .dashboard, 
-.classic-mode .form-container {
+.classic-mode .app-window {
   background-color: #c0c0c0;
   border-top: 2px solid #ffffff;
   border-left: 2px solid #ffffff;
   border-bottom: 2px solid #000000;
   border-right: 2px solid #000000;
   box-shadow: inset -1px -1px #808080, inset 1px 1px #dfdfdf;
-  padding: 12px;
-  margin-bottom: 15px;
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* The Classic Active Window Title Bar */
 .classic-mode .header {
-  background-color: #000080; /* Classic Windows active title bar blue */
+  background-color: #000080;
   color: #ffffff;
-  padding: 4px 10px;
+  padding: 3px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: none;
   font-weight: bold;
   letter-spacing: 0.5px;
 }
 
-.classic-mode .header h1 {
-  font-size: 16px;
-  margin: 0;
-}
+.classic-mode .header h1 { font-size: 14px; margin: 0; display: flex; align-items: center; gap: 8px;}
+.classic-mode .header h1::before { content: "🗄️"; font-size: 16px; }
 
-/* Classic 3D Buttons */
-.classic-mode button {
-  background: #c0c0c0;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-bottom: 2px solid #000000;
-  border-right: 2px solid #000000;
-  box-shadow: inset -1px -1px #808080, inset 1px 1px #dfdfdf;
-  padding: 4px 12px;
-  font-family: "MS Sans Serif", "Tahoma", sans-serif;
-  font-size: 12px;
-  color: #000;
-  cursor: pointer;
-  outline: none;
-}
-
-/* Button Push Effect */
-.classic-mode button:active {
-  border-top: 2px solid #000000;
-  border-left: 2px solid #000000;
-  border-bottom: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
-  box-shadow: inset 1px 1px #808080, inset -1px -1px #dfdfdf;
-  padding: 5px 11px 3px 13px; /* Shifts text slightly to simulate pressing down */
-}
-
-/* Tighter Dashboard for Classic Mode */
-.classic-mode .dashboard {
+.classic-mode .menu-bar {
   display: flex;
-  gap: 15px;
+  padding: 2px 10px;
+  border-bottom: 1px solid #808080;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.classic-mode .menu-item { padding: 4px 8px; cursor: pointer; }
+.classic-mode .menu-item:hover { background: #000080; color: white; }
+.classic-mode .menu-item u { text-decoration: underline; }
+
+.classic-mode .content-area { padding: 10px; }
+
+.classic-mode .dashboard, 
+.classic-mode .form-container,
+.classic-mode .chart-wrapper {
+  margin-bottom: 15px;
 }
 
+.classic-mode .dashboard { display: flex; gap: 15px; }
 .classic-mode .stat-card {
   border: 2px groove #ffffff;
-  padding: 10px;
-  flex: 1;
-  text-align: center;
+  padding: 10px; flex: 1; text-align: center;
+}
+.classic-mode .stat-card h3 { margin-top: 5px; font-size: 20px; }
+
+.classic-mode .form-container {
+  display: flex;
+  align-items: center;
 }
 
-.classic-mode .stat-card h3 {
-  margin-top: 5px;
-  font-size: 20px;
-}
-
-/* Inset 3D Inputs (Text fields and Dropdowns) */
-.classic-mode input, 
-.classic-mode select {
-  background: #ffffff;
-  border-top: 2px solid #808080;
-  border-left: 2px solid #808080;
-  border-bottom: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
-  box-shadow: inset 1px 1px #000000;
-  padding: 3px 5px;
-  margin-right: 10px;
-  font-family: "MS Sans Serif", "Tahoma", sans-serif;
-  font-size: 13px;
-  color: #000;
-  border-radius: 0; /* Strict no-rounded-corners policy */
-}
-
-/* Classic Table Styling */
-.classic-mode table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #ffffff;
-  /* Table wrapping inset */
-  border-top: 2px solid #808080;
-  border-left: 2px solid #808080;
-  border-bottom: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
-}
-
-.classic-mode th {
-  background-color: #c0c0c0;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-bottom: 2px solid #000000;
-  border-right: 2px solid #000000;
+.classic-mode button {
+  background: #c0c0c0; border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #000000; border-right: 2px solid #000000;
   box-shadow: inset -1px -1px #808080, inset 1px 1px #dfdfdf;
-  padding: 4px 8px;
-  text-align: left;
-  font-weight: normal;
+  padding: 4px 12px; font-family: "MS Sans Serif", "Tahoma", sans-serif;
+  font-size: 12px; color: #000; cursor: pointer; outline: none;
+}
+.classic-mode button:active {
+  border-top: 2px solid #000000; border-left: 2px solid #000000;
+  border-bottom: 2px solid #ffffff; border-right: 2px solid #ffffff;
+  box-shadow: inset 1px 1px #808080, inset -1px -1px #dfdfdf; padding: 5px 11px 3px 13px;
+}
+.classic-mode .header-btns button {
+  padding: 2px 6px; font-weight: bold; margin-left: 3px; min-width: 24px;
 }
 
-.classic-mode td {
-  border: 1px solid #c0c0c0;
-  padding: 4px 8px;
+.classic-mode input, .classic-mode select {
+  background: #ffffff; border-top: 2px solid #808080; border-left: 2px solid #808080;
+  border-bottom: 2px solid #ffffff; border-right: 2px solid #ffffff;
+  box-shadow: inset 1px 1px #000000; padding: 3px 5px; margin-right: 10px;
+  font-family: "MS Sans Serif", "Tahoma", sans-serif; font-size: 13px; color: #000; border-radius: 0;
 }
 
-/* Status text coloring for classic mode (no badges, just colored text or plain text) */
-.classic-mode .status-badge {
-  font-weight: bold;
+.table-responsive {
+  width: 100%;
+  overflow-x: auto; /* Allows horizontal scrolling on small screens */
 }
-.classic-mode .status-completed { color: #008000; }
-.classic-mode .status-processing { color: #0000FF; }
-.classic-mode .status-pending { color: #808000; }
 
+.classic-mode table {
+  width: 100%; border-collapse: collapse; background: #ffffff;
+  border-top: 2px solid #808080; border-left: 2px solid #808080;
+  border-bottom: 2px solid #ffffff; border-right: 2px solid #ffffff;
+}
+.classic-mode th {
+  background-color: #c0c0c0; border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #000000; border-right: 2px solid #000000;
+  padding: 4px 8px; text-align: left; font-weight: normal;
+}
+.classic-mode td { border: 1px solid #c0c0c0; padding: 4px 8px; }
+
+.classic-mode .status-bar {
+  border-top: 1px solid #808080; border-bottom: 1px solid #ffffff;
+  padding: 4px 10px; font-size: 11px; display: flex; justify-content: space-between;
+}
 
 /* =========================================
-   STELLAR MODE (Modern, Dark, Sleek) - UNCHANGED
+   STELLAR MODE (Modern, Dark, Sleek)
    ========================================= */
 .stellar-mode {
-  background-color: #0f172a;
-  font-family: "Inter", sans-serif;
-  color: #e2e8f0;
-  padding: 2rem;
+  background-color: #0f172a; font-family: "Inter", sans-serif;
+  color: #e2e8f0; padding: 2rem;
 }
+.stellar-mode .app-window { max-width: 1200px; margin: 0 auto; width: 100%; }
+.stellar-mode .menu-bar, .stellar-mode .status-bar { display: none; }
 
 .stellar-mode .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #1e293b;
-  margin-bottom: 2rem;
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 1rem; border-bottom: 1px solid #1e293b; margin-bottom: 2rem;
 }
-
 .stellar-mode .header h1 {
   background: -webkit-linear-gradient(#38bdf8, #818cf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 600;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600;
 }
 
 .stellar-mode button {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  color: white;
-  border: none;
-  padding: 0.5rem 1.2rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  cursor: pointer;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: white; border: none;
+  padding: 0.6rem 1.4rem; border-radius: 9999px; font-weight: 600; cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
+.stellar-mode button:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); }
 
-.stellar-mode button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
-}
-
-.stellar-mode .dashboard {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
+.stellar-mode .dashboard { display: flex; gap: 1rem; margin-bottom: 2rem; }
 .stellar-mode .stat-card {
-  background: #1e293b;
-  padding: 1.5rem;
-  border-radius: 12px;
-  flex: 1;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  border: 1px solid #334155;
+  background: #1e293b; padding: 1.5rem; border-radius: 12px; flex: 1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #334155;
 }
 
 .stellar-mode .form-container {
-  background: #1e293b;
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 2rem;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  border: 1px solid #334155;
+  background: #1e293b; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;
+  display: flex; gap: 1rem; align-items: center; border: 1px solid #334155;
 }
-
 .stellar-mode input, .stellar-mode select {
-  background: #0f172a;
-  border: 1px solid #334155;
-  color: #e2e8f0;
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  outline: none;
+  background: #0f172a; border: 1px solid #334155; color: #e2e8f0;
+  padding: 0.6rem 1rem; border-radius: 8px; outline: none;
 }
-
 .stellar-mode input:focus, .stellar-mode select:focus {
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
 }
 
 .stellar-mode table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: #1e293b;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #334155;
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155;
 }
-
 .stellar-mode th {
-  background: #0f172a;
-  padding: 1rem;
-  text-align: left;
-  font-weight: 600;
-  color: #94a3b8;
+  background: #0f172a; padding: 1rem; text-align: left; font-weight: 600; color: #94a3b8;
   border-bottom: 1px solid #334155;
 }
-
-.stellar-mode td {
-  padding: 1rem;
-  border-bottom: 1px solid #334155;
-}
-
-.stellar-mode tr:last-child td {
-  border-bottom: none;
-}
-
-.stellar-mode tr:hover td {
-  background-color: #1e293b;
-  filter: brightness(1.2);
-}
-
-.stellar-mode .status-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
+.stellar-mode td { padding: 1rem; border-bottom: 1px solid #334155; }
+.stellar-mode tr:last-child td { border-bottom: none; }
+.stellar-mode .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; display: inline-block; }
 .stellar-mode .status-pending { background: rgba(234, 179, 8, 0.2); color: #facc15; }
 .stellar-mode .status-processing { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
 .stellar-mode .status-completed { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+
+
+/* =========================================
+   MOBILE RESPONSIVENESS (Phones/Tablets)
+   ========================================= */
+@media (max-width: 768px) {
+  /* Reduce padding on mobile */
+  .classic-mode, .stellar-mode { padding: 10px; }
+  .stellar-mode { padding: 1rem; }
+  
+  /* Stack Header elements */
+  .classic-mode .header, .stellar-mode .header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  /* Stack Dashboard Cards */
+  .classic-mode .dashboard, .stellar-mode .dashboard {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* Stack Form Inputs */
+  .classic-mode .form-container, .stellar-mode .form-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .classic-mode input, .classic-mode select, 
+  .stellar-mode input, .stellar-mode select {
+    margin-right: 0;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+  
+  .classic-mode button, .stellar-mode button {
+    width: 100%;
+  }
+
+  /* Don't stretch the header buttons on classic */
+  .classic-mode .header-btns button {
+    width: auto;
+    margin-bottom: 0;
+  }
+}
