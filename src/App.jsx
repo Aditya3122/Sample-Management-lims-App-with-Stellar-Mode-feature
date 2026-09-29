@@ -1,30 +1,62 @@
-import React, { useState } from 'react';
-import './App.css'; // Assuming you have some basic styles for the app
+import React, { useState, useEffect } from 'react';
+import './App.css';
 
 const App = () => {
-  const [theme, setTheme] = useState('stellar'); // 'classic' or 'stellar'
-  const [samples, setSamples] = useState([
-    { id: 'SMP-1001', name: 'Blood Serum Alpha', status: 'Completed', date: '2026-09-28' },
-    { id: 'SMP-1002', name: 'Water Quality Test B', status: 'Processing', date: '2026-09-28' },
-    { id: 'SMP-1003', name: 'Soil Extract Gamma', status: 'Pending', date: '2026-09-29' },
-  ]);
-
+  const [theme, setTheme] = useState('stellar'); 
+  const [samples, setSamples] = useState([]); 
   const [newSample, setNewSample] = useState({ name: '', status: 'Pending' });
+
+  // FETCH DATA ON LOAD
+  useEffect(() => {
+    fetch('http://localhost:8081/api/samples')
+      .then(res => res.json())
+      .then(data => setSamples(data))
+      .catch(err => console.error("Failed to fetch samples:", err));
+  }, []);
 
   const toggleTheme = () => {
     setTheme(theme === 'classic' ? 'stellar' : 'classic');
   };
 
-  const handleAddSample = () => {
+  // ADD SAMPLE
+  const handleAddSample = async () => {
     if (!newSample.name) return;
+    
+    const newId = `SMP-${Math.floor(Math.random() * 10000)}`;
     const sample = {
-      id: `SMP-${1004 + samples.length}`,
+      id: newId,
       name: newSample.name,
       status: newSample.status,
       date: new Date().toISOString().split('T')[0]
     };
-    setSamples([...samples, sample]);
-    setNewSample({ name: '', status: 'Pending' });
+
+    try {
+      const response = await fetch('http://localhost:8081/api/samples', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sample)
+      });
+      
+      const savedSample = await response.json();
+      setSamples([...samples, savedSample]);
+      setNewSample({ name: '', status: 'Pending' });
+    } catch (err) {
+      console.error("Failed to save sample:", err);
+    }
+  };
+
+  // DELETE SAMPLE
+  const handleDeleteSample = async (id) => {
+    try {
+      await fetch(`http://localhost:8081/api/samples/${id}`, {
+        method: 'DELETE',
+      });
+      
+      // Update UI by filtering out the deleted sample
+      setSamples(samples.filter(sample => sample.id !== id));
+    } catch (err) {
+      console.error("Failed to delete sample:", err);
+    }
   };
 
   const getStatusClass = (status) => {
@@ -40,7 +72,6 @@ const App = () => {
         </button>
       </header>
 
-      {/* Dashboard Metrics */}
       <div className="dashboard">
         <div className="stat-card">
           <p>Total Samples</p>
@@ -56,7 +87,6 @@ const App = () => {
         </div>
       </div>
 
-      {/* Action / Input Form */}
       <div className="form-container">
         <input 
           type="text" 
@@ -75,7 +105,6 @@ const App = () => {
         <button onClick={handleAddSample}>Register Sample</button>
       </div>
 
-      {/* Data Table */}
       <table>
         <thead>
           <tr>
@@ -83,6 +112,7 @@ const App = () => {
             <th>Name</th>
             <th>Registration Date</th>
             <th>Status</th>
+            <th>Actions</th> {/* New Column Header */}
           </tr>
         </thead>
         <tbody>
@@ -96,11 +126,20 @@ const App = () => {
                   {sample.status}
                 </span>
               </td>
+              <td>
+                {/* Delete Button */}
+                <button 
+                  onClick={() => handleDeleteSample(sample.id)}
+                  style={{ background: '#ef4444', color: '#fff', padding: '0.3rem 0.8rem', fontSize: '0.8rem' }}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
           {samples.length === 0 && (
             <tr>
-              <td colSpan="4" style={{ textAlign: 'center' }}>No samples found.</td>
+              <td colSpan="5" style={{ textAlign: 'center' }}>No samples found or loading...</td>
             </tr>
           )}
         </tbody>
